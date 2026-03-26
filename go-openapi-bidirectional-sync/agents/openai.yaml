@@ -1,0 +1,4 @@
+interface:
+  display_name: "Go OpenAPI 双向同步"
+  short_description: "面向 Go 的 OpenAPI 协议与代码双向生成（支持 Claude Code/Codex）"
+  default_prompt: "请在 Go 项目中执行 OpenAPI 双向同步：支持 Spec First 与 Code First，优先 chi，兼容 gin/echo/net/http，并尽量增量更新已有 openapi.yaml。"
