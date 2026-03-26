@@ -256,3 +256,53 @@ go get -tool github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
 4. 单接口场景严格限制分析范围，避免全项目扫描。
 5. 区分“已确认项”与“推断项”。
 6. 禁止臆造不存在的接口、字段、状态码。
+
+## 脚本支持（建议优先使用）
+
+本技能已提供可复用扫描脚本，适用于 Claude Code 与 Codex 的自动化执行链路。
+
+### 1) 路由扫描脚本
+
+文件：`scripts/scan_routes.py`
+
+用途：扫描 Go 项目中的路由注册，输出 `method/path/handler/file/line/evidence` 映射。
+
+示例：
+
+```bash
+python scripts/scan_routes.py --project-root /path/to/project
+python scripts/scan_routes.py --project-root /path/to/project --endpoint /api/v1/orders/{id} --method GET
+```
+
+### 2) 单接口推断脚本
+
+文件：`scripts/infer_endpoint_schema.py`
+
+用途：基于 handler 函数名做保守推断，输出请求来源与响应证据（path/query/header/json/status）。
+
+示例：
+
+```bash
+python scripts/infer_endpoint_schema.py \
+  --project-root /path/to/project \
+  --handler GetOrder \
+  --path /api/v1/orders/{id} \
+  --method GET
+```
+
+### 3) OpenAPI 增量合并脚本（JSON v1）
+
+文件：`scripts/merge_openapi_patch.py`
+
+用途：将 OpenAPI patch 合并到 base 文档（当前脚本使用 JSON 输入输出，保证无额外依赖）。
+
+示例：
+
+```bash
+python scripts/merge_openapi_patch.py \
+  --base api/openapi.json \
+  --patch api/openapi.patch.json \
+  --out api/openapi.merged.json
+```
+
+说明：如项目主文档是 YAML，可在外层流程先做 YAML/JSON 转换后再调用该脚本。
