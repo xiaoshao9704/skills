@@ -13,8 +13,10 @@ import re
 from dataclasses import dataclass, asdict
 
 ROUTE_PATTERNS = [
+    # chi explicit method: r.Method("GET", "/x", h)
+    re.compile(r"(?P<receiver>\w+)\.Method\s*\(\s*\"(?P<verb>[^\"]+)\"\s*,\s*\"(?P<path>[^\"]+)\"\s*,\s*(?P<handler>[^\),]+)"),
     # chi / net/http style: r.Get("/x", h) / mux.HandleFunc("/x", h)
-    re.compile(r"(?P<receiver>\w+)\.(?P<method>Get|Post|Put|Patch|Delete|Options|Head|Method)\s*\(\s*\"(?P<path>[^\"]+)\"\s*,\s*(?P<handler>[^\),]+)"),
+    re.compile(r"(?P<receiver>\w+)\.(?P<method>Get|Post|Put|Patch|Delete|Options|Head)\s*\(\s*\"(?P<path>[^\"]+)\"\s*,\s*(?P<handler>[^\),]+)"),
     re.compile(r"(?P<receiver>\w+)\.HandleFunc\s*\(\s*\"(?P<path>[^\"]+)\"\s*,\s*(?P<handler>[^\),]+)"),
     # gin / echo style: r.GET("/x", h)
     re.compile(r"(?P<receiver>\w+)\.(?P<method>GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD|Any)\s*\(\s*\"(?P<path>[^\"]+)\"\s*,\s*(?P<handler>[^\),]+)"),
@@ -64,7 +66,7 @@ def scan_file(path: pathlib.Path) -> list[RouteRecord]:
             if not match:
                 continue
 
-            method_raw = match.groupdict().get("method") or "METHOD"
+            method_raw = match.groupdict().get("verb") or match.groupdict().get("method") or "METHOD"
             routes.append(
                 RouteRecord(
                     method=METHOD_NORMALIZE.get(method_raw, method_raw.upper()),

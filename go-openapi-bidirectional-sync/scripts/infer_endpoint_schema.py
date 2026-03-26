@@ -15,7 +15,7 @@ FUNC_PATTERN = re.compile(r"^func\s+(?:\(.*\)\s+)?(?P<name>[A-Za-z0-9_]+)\s*\(")
 STATUS_PATTERN = re.compile(r"\.(?:Status|WriteHeader)\s*\(\s*(?:http\.)?Status(?P<code>[A-Za-z0-9_]+)")
 JSON_BIND_PATTERN = re.compile(r"\.(?:Bind|BindJSON|ShouldBindJSON|Decode)\s*\(")
 JSON_WRITE_PATTERN = re.compile(r"\.(?:JSON|Encode)\s*\(")
-PATH_PARAM_PATTERN = re.compile(r"(?:URLParam|Param|ChiURLParam|PathValue)\s*\(")
+PATH_PARAM_PATTERN = re.compile(r"(?:URLParam|ChiURLParam|PathValue|\.Param)\s*\(")
 QUERY_PATTERN = re.compile(r"(?:Query|URL\.Query\(\)\.Get)\s*\(")
 HEADER_PATTERN = re.compile(r"(?:Header\.Get|GetHeader|Request\.Header\.Get)\s*\(")
 
